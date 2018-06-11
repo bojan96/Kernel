@@ -9,7 +9,7 @@ CODE_SELECTOR equ 0x08
 DATA_SELECTOR equ 0x10
 IDT_FLAGS equ 0x8e
 
-; 48 = 32 resrved + 16 IRQs
+; 32 reserved idt entries
 IDT_SIZE equ (32*8 - 1) ;in bytes, points to last valid byte
 GDT_SIZE equ (3*8 - 1) ; same as above
 
