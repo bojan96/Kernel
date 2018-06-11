@@ -52,7 +52,6 @@ _start:
 	mov esp, stack_top
 	call gdt_init ; Setup GDT
 	call idt_init ; Setup IDT 
-	;call setup_irq ; remap irqs, setup idt entries for irqs
 	;sti ; Enable interrupts
 	;int 1
 
@@ -112,27 +111,6 @@ exit_init:
 
 %endmacro
 
-%macro IDT_ENTRY_IRQ_MASTER 1
-	mov eax, irq_master
-	mov [idt + %1*8], ax; offset, lower 16 bits
-	shr ax, 16
-	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
-	mov byte [idt + %1*8 + 4], 0 ; always zero
-	mov byte [idt + %1*8 + 5], IDT_FLAGS ; flags
-	mov [idt + %1*8 + 6], ax ;offset, higher 16 bits
-%endmacro
-
-%macro IDT_ENTRY_IRQ_SLAVE 1
-	mov eax, irq_slave
-	mov [idt + %1*8], ax; offset, lower 16 bits
-	shr ax, 16
-	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
-	mov byte [idt + %1*8 + 4], 0 ; always zero
-	mov byte [idt + %1*8 + 5], IDT_FLAGS ; flags
-	mov [idt + %1*8 + 6], ax ;offset, higher 16 bits
-%endmacro
-
-
 idt_init:
 	IDT_ENTRY_SETUP 0
 	IDT_ENTRY_SETUP 1
@@ -171,58 +149,10 @@ idt_init:
 	lidt [idt_reg]
 	ret
 
-%macro portW 2
-	mov al, %2
-	out %1, al
-%endmacro
-
-remap_irq:
-	; Remap IRQs
-	portW 0x20, 0x11
-        portW 0xa0, 0x11
-        portW 0x21, 0x20
-        portW 0xa1, 0x28
-        portW 0x21, 0x04
-        portW 0xa1, 0x02
-        portW 0x21, 0x01
-        portW 0xa1, 0x01
-        portW 0x21, 0x0
-        portW 0xa1, 0x0
-	ret
-
-setup_irq:
-	call remap_irq
-	IDT_ENTRY_IRQ_MASTER 32
-	IDT_ENTRY_IRQ_MASTER 33
-	IDT_ENTRY_IRQ_MASTER 34
-	IDT_ENTRY_IRQ_MASTER 35
-	IDT_ENTRY_IRQ_MASTER 36
-	IDT_ENTRY_IRQ_MASTER 37
-	IDT_ENTRY_IRQ_MASTER 38
-	IDT_ENTRY_IRQ_MASTER 39
-	IDT_ENTRY_IRQ_SLAVE 40
-	IDT_ENTRY_IRQ_SLAVE 41
-	IDT_ENTRY_IRQ_SLAVE 42
-	IDT_ENTRY_IRQ_SLAVE 43
-	IDT_ENTRY_IRQ_SLAVE 44
-	IDT_ENTRY_IRQ_SLAVE 45
-	IDT_ENTRY_IRQ_SLAVE 46
-	IDT_ENTRY_IRQ_SLAVE 47
-	ret
-
 interrupt:
 	iret
 
 interrupt_error:
 	add esp, 4
-	iret
-
-irq_master:
-	portW 0x20, 0x20
-	iret
-
-irq_slave:
-	portW 0xa0, 0x20
-	portW 0x20, 0x20
 	iret
 
