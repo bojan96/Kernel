@@ -53,7 +53,7 @@ _start:
 	call gdt_init ; Setup GDT
 	call idt_init ; Setup IDT 
 	;sti ; Enable interrupts
-	int 0
+	;int 0 If I uncomment this line, QEMU keeps rebooting
 
 	extern kernel_main
 	call kernel_main
