@@ -14,3 +14,6 @@ $(BUILD_DIR)/kernel.o:$(SRC_DIR)/kernel.c
 $(BUILD_DIR)/boot.o:$(SRC_DIR)/boot.asm
 	nasm -felf32 $(SRC_DIR)/boot.asm -o $(BUILD_DIR)/boot.o
 
+
+clean:
+	rm build/*
