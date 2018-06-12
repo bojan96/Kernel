@@ -112,12 +112,5 @@ void kernel_main(void)
  
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Hello, kernel World!\n");
-	char bla[256];
-	int i = 0;	
-	while(true)
-	{
-		bla[i++] = 5;
-		if(i == 256)
-			i = 0;
-	}
+	while(true);
 }
