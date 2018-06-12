@@ -52,8 +52,7 @@ _start:
 	mov esp, stack_top
 	call gdt_init ; Setup GDT
 	call idt_init ; Setup IDT 
-	;sti ; Enable interrupts
-	;int 0 If I uncomment this line, QEMU keeps rebooting
+	sti ; Enable interrupts
 
 	extern kernel_main
 	call kernel_main
@@ -88,7 +87,7 @@ exit_init:
 %macro IDT_ENTRY_SETUP 1
 	mov eax, interrupt
 	mov [idt + %1*8], ax; offset, lower 16 bits
-	shr ax, 16
+	shr eax, 16
 	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
 	mov byte [idt + %1*8 + 4], 0 ; always zero
 	mov byte [idt + %1*8 + 5], IDT_FLAGS ; flags
@@ -99,7 +98,7 @@ exit_init:
 %macro IDT_ENTRY_SETUP_ERR 1
 	mov eax, interrupt_error
 	mov [idt + %1*8], ax; offset, lower 16 bits
-	shr ax, 16
+	shr eax, 16
 	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
 	mov byte [idt + %1*8 + 4], 0 ; always zero
 	mov byte [idt + %1*8 + 5], IDT_FLAGS ; flags
@@ -140,6 +139,8 @@ idt_init:
 	IDT_ENTRY_SETUP 29
 	IDT_ENTRY_SETUP 30
 	IDT_ENTRY_SETUP 31
+
+	; Fill IDTR with size and 
 	mov word [idt_reg], IDT_SIZE
 	mov dword [idt_reg + 2], idt
 	lidt [idt_reg]
