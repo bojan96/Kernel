@@ -53,11 +53,7 @@ _start:
 	call gdt_init ; Setup GDT
 	call idt_init ; Setup IDT 
 	;sti ; Enable interrupts
-	int 1
-
-; Go into infinite loop
-;.loop:	nop
-;	jmp .loop
+	int 0
 
 	extern kernel_main
 	call kernel_main
