@@ -9,8 +9,8 @@ CODE_SELECTOR equ 0x08
 DATA_SELECTOR equ 0x10
 IDT_FLAGS equ 0x8e
 
-; 32 reserved idt entries
-IDT_SIZE equ (32*8 - 1) ;in bytes, points to last valid byte
+; 32 reserved idt entries + 16 irq handlers
+IDT_SIZE equ (48*8 - 1) ;in bytes, points to last valid byte
 GDT_SIZE equ (3*8 - 1) ; same as above
 
 section .multiboot
@@ -43,6 +43,7 @@ stack_bottom:
 resb 16384 ; 16 KiB
 stack_top:
 
+extern remap_irq
 
 section .text
 
@@ -51,9 +52,8 @@ _start:
 	cli ; Disable interrupts	
 	mov esp, stack_top
 	call gdt_init ; Setup GDT
-	call idt_init ; Setup IDT 
-	sti ; Enable interrupts
-
+	call remap_irq
+	call idt_init ; Setup IDT
 	extern kernel_main
 	call kernel_main
 
@@ -106,6 +106,18 @@ exit_init:
 
 %endmacro
 
+;first argument is idt entry index, second is irq number
+%macro IDT_IRQ_SETUP 2
+	extern irq_handler_%2
+	mov eax, irq_handler_%2
+	mov [idt + %1*8], ax; offset, lower 16 bits
+	shr eax, 16
+	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
+	mov byte [idt + %1*8 + 4], 0 ; always zero
+	mov byte [idt + %1*8 + 5], IDT_FLAGS ; flags
+	mov [idt + %1*8 + 6], ax ;offset, higher 16 bits
+%endmacro
+
 idt_init:
 	IDT_ENTRY_SETUP 0
 	IDT_ENTRY_SETUP 1
@@ -139,6 +151,22 @@ idt_init:
 	IDT_ENTRY_SETUP 29
 	IDT_ENTRY_SETUP 30
 	IDT_ENTRY_SETUP 31
+      	IDT_IRQ_SETUP 32, 0
+	IDT_IRQ_SETUP 33, 1
+	IDT_IRQ_SETUP 34, 2
+	IDT_IRQ_SETUP 35, 3
+	IDT_IRQ_SETUP 36, 4
+	IDT_IRQ_SETUP 37, 5
+	IDT_IRQ_SETUP 38, 6
+	IDT_IRQ_SETUP 39, 7
+	IDT_IRQ_SETUP 40, 8
+	IDT_IRQ_SETUP 41, 9
+	IDT_IRQ_SETUP 42, 10
+	IDT_IRQ_SETUP 43, 11
+	IDT_IRQ_SETUP 44, 12
+	IDT_IRQ_SETUP 45, 13
+	IDT_IRQ_SETUP 46, 14
+	IDT_IRQ_SETUP 47, 15	
 
 	; Fill IDTR with size and 
 	mov word [idt_reg], IDT_SIZE
@@ -146,7 +174,11 @@ idt_init:
 	lidt [idt_reg]
 	ret
 
+extern interrupt_handler
 interrupt:
+	pushad
+	call interrupt_handler
+	popad
 	iret
 
 interrupt_error:
