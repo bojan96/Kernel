@@ -1,7 +1,7 @@
 BUILD_DIR = build
 SRC_DIR = src
 OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/irq_high_level.o
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra -masm=intel
 
 all:$(BUILD_DIR)/kernel
 
