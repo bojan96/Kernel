@@ -169,7 +169,7 @@ idt_init:
 	IDT_IRQ_SETUP 46, 14
 	IDT_IRQ_SETUP 47, 15	
 
-	; Fill IDTR with size and 
+	; Fill IDTR with size and base
 	mov word [idt_reg], IDT_SIZE
 	mov dword [idt_reg + 2], idt
 	lidt [idt_reg]
