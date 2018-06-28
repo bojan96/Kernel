@@ -85,7 +85,8 @@ exit_init:
 	ret
 
 %macro IDT_ENTRY_SETUP 1
-	mov eax, interrupt
+	extern isr_handler_%1
+	mov eax, isr_handler_%1
 	mov [idt + %1*8], ax; offset, lower 16 bits
 	shr eax, 16
 	mov word [idt + %1*8 + 2], CODE_SELECTOR ; segment selector
@@ -173,13 +174,6 @@ idt_init:
 	mov dword [idt_reg + 2], idt
 	lidt [idt_reg]
 	ret
-
-extern interrupt_handler
-interrupt:
-	pushad
-	call interrupt_handler
-	popad
-	iret
 
 interrupt_error:
 	add esp, 4
