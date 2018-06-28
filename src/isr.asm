@@ -1,0 +1,54 @@
+
+
+section .data
+isr_code dd 0
+
+section .text
+extern isr_common_high_level
+isr_common:
+	pushad
+	push dword [isr_code]
+	call isr_common_high_level
+	pop ecx
+	popad
+	iret	
+	
+%macro DECLARE_ISR 1
+global isr_handler_%1
+isr_handler_%1:
+	mov dword [isr_code], %1
+	jmp isr_common
+%endmacro
+
+DECLARE_ISR 0
+DECLARE_ISR 1
+DECLARE_ISR 2
+DECLARE_ISR 3
+DECLARE_ISR 4
+DECLARE_ISR 5
+DECLARE_ISR 6
+DECLARE_ISR 7
+DECLARE_ISR 8
+DECLARE_ISR 9
+DECLARE_ISR 10
+DECLARE_ISR 11
+DECLARE_ISR 12
+DECLARE_ISR 13
+DECLARE_ISR 14
+DECLARE_ISR 15
+DECLARE_ISR 16
+DECLARE_ISR 17
+DECLARE_ISR 18
+DECLARE_ISR 19
+DECLARE_ISR 20
+DECLARE_ISR 21
+DECLARE_ISR 22
+DECLARE_ISR 23
+DECLARE_ISR 24
+DECLARE_ISR 25
+DECLARE_ISR 26
+DECLARE_ISR 27
+DECLARE_ISR 28
+DECLARE_ISR 29
+DECLARE_ISR 30
+DECLARE_ISR 31
