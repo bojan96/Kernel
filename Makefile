@@ -1,7 +1,7 @@
 BUILD_DIR = build
 SRC_DIR = src
-OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/irq_high_level.o $(BUILD_DIR)/isr_high_level.o $(BUILD_DIR)/isr.o
-CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra -masm=intel
+OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/irq_high_level.o $(BUILD_DIR)/isr_high_level.o $(BUILD_DIR)/isr.o $(BUILD_DIR)/io.o
+CFLAGS = -std=gnu99 -ffreestanding -Wall -Wextra -masm=intel
 
 all:$(BUILD_DIR)/kernel
 
@@ -26,6 +26,9 @@ $(BUILD_DIR)/irq_high_level.o:$(SRC_DIR)/irq_high_level.c
 
 $(BUILD_DIR)/isr_high_level.o:$(SRC_DIR)/isr_high_level.c
 	i686-elf-gcc -c $(SRC_DIR)/isr_high_level.c -o $(BUILD_DIR)/isr_high_level.o $(CFLAGS)
+	
+$(BUILD_DIR)/io.o : $(SRC_DIR)/io.c $(SRC_DIR)/io.h
+	i686-elf-gcc -c $(SRC_DIR)/io.c -o $(BUILD_DIR)/io.o $(CFLAGS)
 
 clean:
 	rm build/*
