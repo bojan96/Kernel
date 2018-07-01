@@ -1,7 +1,7 @@
 #include "io.h"
 
 
-void writeToPort(int16_t port, int32_t data)
+void writePortByte(uint16_t port, uint8_t data)
 {
 	__asm__ volatile
 	(
@@ -10,9 +10,9 @@ void writeToPort(int16_t port, int32_t data)
 	);
 }
 
-int32_t readFromPort(int16_t port)
+uint8_t readPortByte(uint16_t port)
 {
-	int32_t value;
+	int8_t value;
 	__asm__ volatile
 	(
 	"in %0, %1\n\t":
@@ -22,3 +22,6 @@ int32_t readFromPort(int16_t port)
 	
 	return value;		
 }
+
+
+
