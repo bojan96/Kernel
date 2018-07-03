@@ -18,7 +18,7 @@ void irq_common_high_level(int irq_code)
 
 
 // Returns 1 if registration was succesful, 0 otherwise
-int RegisterHandler(int irqNum, IRQHandler handler)
+int registerHandler(int irqNum, IRQHandler handler)
 {
 	if(irqNum >= 16)
 		return 0;

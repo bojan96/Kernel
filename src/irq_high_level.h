@@ -3,4 +3,4 @@
 
 typedef void (*IRQHandler)(void);
 
-int RegisterHandler(int irqNum, IRQHandler handler);
+int registerHandler(int irqNum, IRQHandler handler);
