@@ -21,7 +21,7 @@ $(BUILD_DIR)/irq.o:$(SRC_DIR)/irq.asm
 $(BUILD_DIR)/isr.o:$(SRC_DIR)/isr.asm
 	nasm -felf32 $(SRC_DIR)/isr.asm -o $(BUILD_DIR)/isr.o
 
-$(BUILD_DIR)/irq_high_level.o:$(SRC_DIR)/irq_high_level.c
+$(BUILD_DIR)/irq_high_level.o : $(SRC_DIR)/irq_high_level.c $(SRC_DIR)/irq_high_level.h
 	i686-elf-gcc -c $(SRC_DIR)/irq_high_level.c -o $(BUILD_DIR)/irq_high_level.o $(CFLAGS)
 
 $(BUILD_DIR)/isr_high_level.o:$(SRC_DIR)/isr_high_level.c
