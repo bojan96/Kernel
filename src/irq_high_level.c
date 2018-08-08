@@ -27,5 +27,18 @@ int registerHandler(int irqNum, IRQHandler handler)
 	return 1;
 }
 
+void enableInterrupts()
+{
+	asm volatile
+	("sti\n\t":::);
+}
+
+void disableInterrupts()
+{
+	asm volatile
+	("cli\n\t":::);
+}
+
+
 
 
