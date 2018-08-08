@@ -29,13 +29,13 @@ int registerHandler(int irqNum, IRQHandler handler)
 
 void enableInterrupts()
 {
-	asm volatile
+	__asm__ volatile
 	("sti\n\t":::);
 }
 
 void disableInterrupts()
 {
-	asm volatile
+	__asm__ volatile
 	("cli\n\t":::);
 }
 
