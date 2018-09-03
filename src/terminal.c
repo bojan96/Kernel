@@ -43,18 +43,22 @@ static uint16_t vgaEntry(unsigned char uc, uint8_t color)
 	return (uint16_t) uc | (uint16_t) color << 8;
 }
 
-void terminal_initialize(void) 
+void terminal_clearScreen()
 {
-	/*terminal_row = 0;
-	terminal_column = 0;*/
-	terminal_color = vgaColor(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-	//terminal_buffer = (uint16_t*) 0xB8000;
+	terminal_row = terminal_column = 0;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
 			 size_t index = y * VGA_WIDTH + x;
 			terminal_buffer[index] = vgaEntry(' ', terminal_color);
 		}
 	}
+	
+}
+
+void terminal_initialize(void) 
+{
+	terminal_color = vgaColor(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	terminal_clearScreen();
 }
 
 void terminal_setcolor(uint8_t color) 

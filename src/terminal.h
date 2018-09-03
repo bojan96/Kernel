@@ -8,3 +8,4 @@ void terminal_initialize(void);
 void terminal_putchar(char ch);
 void terminal_setcolor(uint8_t color);
 void terminal_writeFormat(const char* format, ...);
+void terminal_clearScreen();
