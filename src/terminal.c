@@ -2,6 +2,7 @@
 #include "util.h"
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdarg.h>
 
 typedef enum {
 	VGA_COLOR_BLACK = 0,
@@ -100,4 +101,19 @@ void terminal_writeLine(const char* text)
 {
 	terminal_write(text);
 	terminal_putchar('\n');
+}
+
+void terminal_writeNum(int num)
+{
+	terminal_write(util_itoa(num));
+}
+
+char formattedStr[255];
+void terminal_writeFormat(const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	util_writeArgsStr(formattedStr, format, args);
+	terminal_write(formattedStr);
+	va_end(args);
 }
