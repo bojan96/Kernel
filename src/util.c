@@ -1,6 +1,7 @@
 #include "util.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 
 size_t util_strlen(const char* str) 
@@ -87,6 +88,47 @@ const char* util_itoa(int num)
 	}
 	
 	return result;
+}
+
+void util_writeArgsStr(char* str, const char* format, va_list args)
+{
+	while(*format)
+	{
+		switch(*format)
+		{
+			case '%':
+				{
+					const char* toCopy;
+					int strLen;
+					char percentSign = '%';
+					
+					switch(*++format)
+					{
+						case 'd':
+							toCopy = util_itoa(va_arg(args, int));
+							strLen = util_strlen(toCopy);
+							break;
+						case 's':
+							toCopy = va_arg(args, const char*);
+							strLen = util_strlen(toCopy);
+							break;
+						case '%':
+							toCopy = &percentSign;
+							strLen = 1;
+							break;
+					}
+					util_memcpy(str, toCopy, strLen);
+					str += strLen;
+				}
+				break;
+			default:
+				*str++ = *format;
+				break;
+		}
+		
+		++format;
+	}
+	*str = '\0';
 }
 
 
