@@ -67,6 +67,17 @@ static void terminal_putEntry(char c, uint8_t color, size_t x, size_t y)
 	size_t index = y * VGA_WIDTH + x;
 	terminal_buffer[index] = vgaEntry(c, color);
 }
+
+static void terminal_scroll()
+{
+	util_memmove(terminal_buffer, terminal_buffer + VGA_WIDTH, 
+	(VGA_HEIGHT - 1) * VGA_WIDTH * sizeof(uint16_t)); 
+	for(size_t i = 0; i < VGA_WIDTH; ++i)
+	{
+		terminal_buffer[(VGA_HEIGHT - 1)*(VGA_WIDTH) + i] = 
+			vgaEntry(' ', terminal_color);
+	}
+}
  
 void terminal_putchar(char ch) 
 {
@@ -74,6 +85,11 @@ void terminal_putchar(char ch)
 	{
 		++terminal_row;
 		terminal_column = 0;
+		if(terminal_row == VGA_HEIGHT)
+		{
+			--terminal_row;
+			terminal_scroll();
+		}
 		return;
 	}
 	
@@ -82,7 +98,10 @@ void terminal_putchar(char ch)
 	{
 		terminal_column = 0;
 		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+		{
+			--terminal_row;
+			terminal_scroll();
+		}
 	}
 }
  
