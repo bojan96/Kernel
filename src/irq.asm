@@ -2,8 +2,8 @@
 PIC_EOI equ 0x20
 
 %macro OUT 2
-	mov ax, %2
-	out %1, ax
+	mov al, %2
+	out %1, al
 %endmacro
 
 %macro DECLARE_IRQ 1
