@@ -67,9 +67,16 @@ static void terminal_putEntry(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vgaEntry(c, color);
 }
  
-void terminal_putchar(char c) 
+void terminal_putchar(char ch) 
 {
-	terminal_putEntry(c, terminal_color, terminal_column, terminal_row);
+	if(ch == '\n')
+	{
+		++terminal_row;
+		terminal_column = 0;
+		return;
+	}
+	
+	terminal_putEntry(ch, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) 
 	{
 		terminal_column = 0;
@@ -78,13 +85,19 @@ void terminal_putchar(char c)
 	}
 }
  
-static void terminal_write(const char* data, size_t size) 
+static void terminal_writeData(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
 		terminal_putchar(data[i]);
 }
- 
-void terminal_writestring(const char* text) 
+
+void terminal_write(const char* text) 
 {
-	terminal_write(text, util_strlen(text));
+	terminal_writeData(text, util_strlen(text));
+}
+
+void terminal_writeLine(const char* text)
+{
+	terminal_write(text);
+	terminal_putchar('\n');
 }

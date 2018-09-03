@@ -1,5 +1,4 @@
-
-extern void terminal_writestring(const char* data);
+#include "terminal.h"
 char *interrupt_messages[] =
 {
     "Division By Zero",
@@ -42,7 +41,7 @@ char *interrupt_messages[] =
 void isr_common_high_level(int interruptCode)
 {
 	if(interruptCode >= 32)
-		terminal_writestring("Not valid code");
+		terminal_write("Not valid code");
 	else
-		terminal_writestring(interrupt_messages[interruptCode]);
+		terminal_write(interrupt_messages[interruptCode]);
 }
