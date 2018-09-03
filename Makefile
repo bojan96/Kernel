@@ -1,6 +1,6 @@
 BUILD_DIR = build
 SRC_DIR = src
-OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/irq_high_level.o $(BUILD_DIR)/isr_high_level.o $(BUILD_DIR)/isr.o $(BUILD_DIR)/io.o $(BUILD_DIR)/timer.o
+OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/irq_high_level.o $(BUILD_DIR)/isr_high_level.o $(BUILD_DIR)/isr.o $(BUILD_DIR)/io.o $(BUILD_DIR)/timer.o $(BUILD_DIR)/terminal.o $(BUILD_DIR)/util.o
 CFLAGS = -std=gnu99 -ffreestanding -Wall -Wextra -masm=intel
 
 all:$(BUILD_DIR)/kernel
@@ -32,5 +32,12 @@ $(BUILD_DIR)/io.o : $(SRC_DIR)/io.c $(SRC_DIR)/io.h
 
 $(BUILD_DIR)/timer.o : $(SRC_DIR)/timer.c $(SRC_DIR)/timer.h $(SRC_DIR)/io.h
 	i686-elf-gcc -c $(SRC_DIR)/timer.c -o $(BUILD_DIR)/timer.o $(CFLAGS)
+	
+$(BUILD_DIR)/util.o : $(SRC_DIR)/util.c $(SRC_DIR)/util.h
+	i686-elf-gcc -c $(SRC_DIR)/util.c -o $(BUILD_DIR)/util.o $(CFLAGS)
+	
+$(BUILD_DIR)/terminal.o : $(SRC_DIR)/terminal.c $(SRC_DIR)/terminal.h $(SRC_DIR)/util.h
+	i686-elf-gcc -c $(SRC_DIR)/terminal.c -o $(BUILD_DIR)/terminal.o $(CFLAGS)
+	
 clean:
 	rm build/*
