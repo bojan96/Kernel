@@ -1,5 +1,5 @@
 #include "terminal.h"
-
+#include "assert.h"
  
 void kernel_main(void) 
 {
@@ -12,7 +12,9 @@ void kernel_main(void)
 	}
 	
 	char str[] = "myStr";
+	terminal_writeFormat("Num: %d %s %d\n", -105, str, 225); 
 	terminal_writeFormat("Num: %d %s %d", -105, str, 225); 
-	
+	assert(3 > 2);
+	assert(2 > 3);
 	while(1);
 }
