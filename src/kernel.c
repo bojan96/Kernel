@@ -13,8 +13,13 @@ void kernel_main(void)
 	
 	char str[] = "myStr";
 	terminal_writeFormat("Num: %d %s %d\n", -105, str, 225); 
-	terminal_writeFormat("Num: %d %s %d", -105, str, 225); 
+	terminal_writeFormat("Num: %d %s %d'n", -105, str, 225); 
 	assert(3 > 2);
-	assert(2 > 3);
+	
+	for(int i = 0; i < 24; ++i)
+	{
+		terminal_writeFormat("%d:dasfadsfasdfsadf\n", i);
+	}
+
 	while(1);
 }
