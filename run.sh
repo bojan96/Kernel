@@ -1,2 +1,4 @@
+
 make
-qemu-system-i386 -kernel build/os.bin
+./make_image.sh
+qemu-system-i386 -cdrom boot/os.iso
