@@ -9,7 +9,7 @@ all:$(BUILD_DIR)/kernel
 $(BUILD_DIR)/kernel:$(OBJ) linker.ld
 	i686-elf-gcc -T linker.ld -o $(BUILD_DIR)/os.bin -ffreestanding -O2 -nostdlib $(OBJ) -lgcc
 
-$(BUILD_DIR)/kernel.o:$(SRC_DIR)/kernel.c
+$(BUILD_DIR)/kernel.o : $(SRC_DIR)/kernel.c $(SRC_DIR)/multiboot.h $(SRC_DIR)/assert.h $(SRC_DIR)/terminal.h
 	i686-elf-gcc -c $(SRC_DIR)/kernel.c -o $(BUILD_DIR)/kernel.o $(CFLAGS)
 
 $(BUILD_DIR)/boot.o:$(SRC_DIR)/boot.asm
