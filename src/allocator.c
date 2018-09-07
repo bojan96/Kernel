@@ -4,10 +4,11 @@
 #include "terminal.h"
 #include <stdint.h>
 
+
 extern char SECTIONS_END;
 
 static uintptr_t MemoryStart;
-static uintptr_t MemorySize;
+static uint32_t MemorySize;
 static uint64_t bitmap = 0; // at least 64 blocks required
 #define MASK_LOW_BITS (BLOCK_SIZE - 1)
 #define MASK_HIGH_BITS (~MASK_LOW_BITS)
@@ -18,7 +19,7 @@ void allocator_init(multiboot_info_t *multibootInfo)
 
 	uintptr_t memoryMapArray = (uintptr_t)multibootInfo->mmap_addr;
 	uintptr_t memoryMapEnd = memoryMapArray + multibootInfo->mmap_length;
-	size_t largestMemSize = 0;
+	uint32_t largestMemSize = 0;
 	uintptr_t sectionEndAddr = (uintptr_t)&SECTIONS_END;
 	
 	terminal_writeFormat("SECTIONS_END: %d\n", sectionEndAddr);
@@ -29,7 +30,7 @@ void allocator_init(multiboot_info_t *multibootInfo)
 		terminal_writeFormat("Addr: %lld, Len: %lld, Type: %d\n", 
 			memoryMapEntry->addr, memoryMapEntry->len, memoryMapEntry->type);
 		
-		size_t regionSize = memoryMapEntry->addr + memoryMapEntry->len - sectionEndAddr;
+		uint32_t regionSize = memoryMapEntry->addr + memoryMapEntry->len - sectionEndAddr;
 		if(memoryMapEntry->type == MULTIBOOT_MEMORY_AVAILABLE  && memoryMapEntry->addr <= sectionEndAddr 
 			&& sectionEndAddr < memoryMapEntry->addr + memoryMapEntry->len && regionSize > largestMemSize)
 		{
@@ -87,6 +88,10 @@ void *allocator_allocateBlocks(uint32_t num)
 			
 	uintptr_t addr = MemoryStart + shift * BLOCK_SIZE;
 	
+#ifdef DEBUG_ALLOCATOR
+	terminal_writeFormat("Bitmap after allocate %llu\n", bitmap);
+#endif
+	
 	return (void*)(addr);
 }
 
@@ -105,4 +110,7 @@ void freeBlocks(void *ptr, uint32_t blocks)
 	// Mark blocks as free
 	bitmap &= ~(mask << blockIndex);
 	
+#ifdef DEBUG_ALLOCATOR
+	terminal_writeFormat("Bitmap after free %llu\n", bitmap);
+#endif	
 }
