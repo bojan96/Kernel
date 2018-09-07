@@ -1,4 +1,5 @@
 #include "util.h"
+#include "assert.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
@@ -51,8 +52,17 @@ void util_memmove(void* dest, const void* src, size_t num)
 }
 
 
+// TODO: Avoid duplicated code
 static char result[12];
+
+static const char* util_llitoa(long long num);
+
 const char* util_itoa(int num)
+{
+	return util_llitoa(num);
+}
+
+static const char* util_llitoa(long long num)
 {
 	bool isNegative = false;
 	
@@ -71,7 +81,7 @@ const char* util_itoa(int num)
 	
 	// Include '-' if negative
 	int charCount = isNegative ? 1 : 0;
-	int toCount = num;
+	long long toCount = num;
 	while(toCount != 0)
 	{
 		++charCount;
@@ -83,6 +93,37 @@ const char* util_itoa(int num)
 	while(num != 0)
 	{
 		// 0x30 is '0';
+		result[charCount - i++] = 0x30 + num % 10;
+		num /= 10;
+	}
+	
+	return result;
+}
+
+
+static const char* util_lluitoa(unsigned long long num)
+{
+	if(num == 0)
+	{
+		result[0] = '0';
+		result[1] = '\0';
+		return result;
+	}
+	
+	unsigned long long toCount = num;
+	int charCount = 0;
+	
+	while(toCount != 0)
+	{
+		++charCount;
+		toCount/= 10;
+	}
+	
+	int i = 1;
+	result[charCount] = '\0';
+	
+	while(num != 0)
+	{
 		result[charCount - i++] = 0x30 + num % 10;
 		num /= 10;
 	}
@@ -105,16 +146,46 @@ void util_writeArgsStr(char* str, const char* format, va_list args)
 					switch(*++format)
 					{
 						case 'd':
-							toCopy = util_itoa(va_arg(args, int));
+							toCopy = util_llitoa(va_arg(args, int));
 							strLen = util_strlen(toCopy);
 							break;
 						case 's':
 							toCopy = va_arg(args, const char*);
 							strLen = util_strlen(toCopy);
 							break;
+						case 'l':
+							switch(*++format)
+							{
+								case 'l':
+									switch(*++format)
+									{
+										case 'd':
+											toCopy = util_llitoa(va_arg(args, long long int));
+											strLen = util_strlen(toCopy);
+										break;
+										case 'u':
+											toCopy = util_lluitoa(va_arg(args, unsigned long long int));
+											strLen = util_strlen(toCopy);
+											break;
+										default:
+											// Unreachable
+											assert(false);
+											break;
+									}
+									break;
+								break;
+								default:
+									// Unreachable
+									assert(false);
+									break;
+							}
+							break;
 						case '%':
 							toCopy = &percentSign;
 							strLen = 1;
+							break;
+						default:
+							assert(false);
 							break;
 					}
 					util_memcpy(str, toCopy, strLen);
