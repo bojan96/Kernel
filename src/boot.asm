@@ -21,6 +21,10 @@ align 4
  
 section .data
 
+multiboot_magic dd 0 ; Magic value passed by bootloader to kernel via eax
+multiboot_info_addr dd 0 ; Address of multiboot info structure  passed by bootlooader to kernel via ebx
+bla times 40000 dd 0
+
 gdt_reg db 0,0,0,0,0,0 ; 6 bytes
 align 8
 
@@ -49,12 +53,19 @@ section .text
 
 global _start:function (_start.end - _start)
 _start:
-	cli ; Disable interrupts	
+	cli ; Disable interrupts
+	
+	mov [multiboot_magic], eax
+	mov [multiboot_info_addr], ebx
+		
 	mov esp, stack_top
 	call gdt_init ; Setup GDT
 	call remap_irq
 	call idt_init ; Setup IDT
 	extern kernel_main
+	
+	push dword [multiboot_info_addr]
+	push dword [multiboot_magic]
 	call kernel_main
 
 	cli
