@@ -96,7 +96,7 @@ void *allocator_allocateBlocks(uint32_t num)
 }
 
 
-void freeBlocks(void *ptr, uint32_t blocks)
+void allocator_freeBlocks(void *ptr, uint32_t blocks)
 {
 	uintptr_t addr = (uintptr_t)ptr;
 	assert(addr >= MemoryStart);
