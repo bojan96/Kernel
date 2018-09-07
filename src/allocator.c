@@ -9,7 +9,6 @@ extern char SECTIONS_END;
 static uintptr_t MemoryStart;
 static uintptr_t MemorySize;
 static uint64_t bitmap = 0; // at least 64 blocks required
-#define BLOCK_SIZE 4096
 #define MASK_LOW_BITS (BLOCK_SIZE - 1)
 #define MASK_HIGH_BITS (~MASK_LOW_BITS)
 
