@@ -204,7 +204,7 @@ void util_writeArgsStr(char* str, const char* format, va_list args)
 
 void util_memset(void *ptr, int ch, size_t num)
 {
-	uint8_t *bytePtr = (uint8_t *ptr);
+	uint8_t *bytePtr = (uint8_t *)ptr;
 	
 	while(num--)
 	{
