@@ -6,3 +6,4 @@ void util_memcpy(void* dest, const void* src, size_t num);
 void util_memmove(void* dest, const void* src, size_t num);
 const char* util_itoa(int num);
 void util_writeArgsStr(char* str, const char* format, va_list args);
+void util_memset(void *ptr, int ch, size_t num);
