@@ -2,6 +2,7 @@
 #include "multiboot.h"
 #include "assert.h"
 #include "terminal.h"
+#include "util.h"
 #include <stdint.h>
 
 
@@ -10,7 +11,7 @@ extern char SECTIONS_END;
 static uintptr_t MemoryStart;
 static uint32_t MemorySize;
 static uint64_t bitmap = 0; // at least 64 blocks required
-#define MASK_LOW_BITS (BLOCK_SIZE - 1)
+#define MASK_LOW_BITS (BLOCK_SIZE - 1)  // BLOCK_SIZE is assumed to be power of 2
 #define MASK_HIGH_BITS (~MASK_LOW_BITS)
 
 void allocator_init(multiboot_info_t *multibootInfo)
@@ -52,6 +53,9 @@ void allocator_init(multiboot_info_t *multibootInfo)
 	
 	// Round down to multiple of BLOCK_SIZE
 	MemorySize = ((sectionEndAddr + largestMemSize) & MASK_HIGH_BITS) - MemoryStart;
+	
+	// Hopefully we did not overwrite any sections (.data, .text, etc.)
+	util_memset((void *)MemoryStart, 0, MemorySize);
 	assert(MemorySize % BLOCK_SIZE == 0);
 	assert(MemorySize <= largestMemSize);
 	assert(MemorySize / BLOCK_SIZE >= sizeof(bitmap) * 8);
