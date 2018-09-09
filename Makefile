@@ -48,7 +48,7 @@ $(BUILD_DIR)/assert.o : $(SRC_DIR)/assert.c $(SRC_DIR)/assert.h
 $(BUILD_DIR)/allocator.o : $(SRC_DIR)/allocator.c $(SRC_DIR)/allocator.h $(SRC_DIR)/multiboot.h $(SRC_DIR)/assert.h $(SRC_DIR)/terminal.h $(SRC_DIR)/util.h
 	i686-elf-gcc -c $(SRC_DIR)/allocator.c -o $(BUILD_DIR)/allocator.o $(CFLAGS)
 	
-$(BUILD_DIR)/thread.o : $(SRC_DIR)/thread.c $(SRC_DIR)/thread.h
+$(BUILD_DIR)/thread.o : $(SRC_DIR)/thread.c $(SRC_DIR)/thread.h $(SRC_DIR)/irq_high_level.h 
 	i686-elf-gcc -c $(SRC_DIR)/thread.c -o $(BUILD_DIR)/thread.o $(CFLAGS)
 	
 clean:
