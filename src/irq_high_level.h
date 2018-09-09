@@ -3,7 +3,7 @@
 
 typedef void (*IRQHandler)(void);
 
-int registerHandler(int irqNum, IRQHandler handler);
+int irqHighLevel_registerHandler(int irqNum, IRQHandler handler);
 
-void enableInterrupts();
-void disableInterrupts();
+void irqHighLevel_enableInterrupts();
+void irqHighLevel_disableInterrupts();

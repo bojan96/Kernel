@@ -8,7 +8,7 @@ void assert_assert(bool condition,const char* expression,const char* file, int l
 	{
 		terminal_clearScreen();
 		terminal_writeFormat("Assertion \"%s\" failed, file: %s, line: %d", expression, file, line);
-		disableInterrupts();
+		irqHighLevel_disableInterrupts();
 		__asm__ volatile ("hlt\n\t":::);	
 	}
 }

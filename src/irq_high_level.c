@@ -1,6 +1,5 @@
 #include "irq_high_level.h"
 
-extern void terminal_writestring(const char* data);
 
 // All initialized to zero
 IRQHandler handlers[16] = {0};
@@ -18,7 +17,7 @@ void irq_common_high_level(int irq_code)
 
 
 // Returns 1 if registration was succesful, 0 otherwise
-int registerHandler(int irqNum, IRQHandler handler)
+int irqHighLevel_registerHandler(int irqNum, IRQHandler handler)
 {
 	if(irqNum >= 16)
 		return 0;
@@ -27,13 +26,13 @@ int registerHandler(int irqNum, IRQHandler handler)
 	return 1;
 }
 
-void enableInterrupts()
+void irqHighLevel_enableInterrupts()
 {
 	__asm__ volatile
 	("sti\n\t":::);
 }
 
-void disableInterrupts()
+void irqHighLevel_disableInterrupts()
 {
 	__asm__ volatile
 	("cli\n\t":::);
