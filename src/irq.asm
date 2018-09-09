@@ -16,6 +16,8 @@ irq_handler_%1:
 section .data
 
 irq_code dd 0
+; Data needed by scheduler
+contextPtr dd 0
 
 section .text
 global remap_irq
@@ -35,6 +37,7 @@ remap_irq:
 extern irq_common_high_level
 irq_common:
 	pushad ; save all GPR
+	mov [contextPtr], esp
 	push dword [irq_code]
 	call irq_common_high_level
 	pop ecx
@@ -47,6 +50,12 @@ not_pic2:
 
 	popad ; restore GPR
 	iret
+
+; Returns current context 
+global get_context
+get_context:
+	mov eax, [contextPtr]
+	ret
 
 DECLARE_IRQ 0
 DECLARE_IRQ 1
