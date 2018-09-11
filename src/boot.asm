@@ -51,6 +51,12 @@ extern remap_irq
 
 section .text
 
+; Used by thread module
+global get_main_thread_stack_start
+get_main_thread_stack_start:
+	mov eax, stack_bottom
+	ret
+	
 global _start:function (_start.end - _start)
 _start:
 	cli ; Disable interrupts
