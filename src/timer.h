@@ -1,4 +1,3 @@
 #pragma once
-#include <stdint.h>
 
-int initTimer(int frequency);
+int timer_init(int frequency);

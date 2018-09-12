@@ -1,10 +1,9 @@
 #include "timer.h"
 #include "io.h"
-#include <stdint.h>
 
 #define CLOCK_RATE 1193182
 // Minimum allowed frequency is 19 HZ, Max 1193182 HZ
-int initTimer(int frequency)
+int timer_init(int frequency)
 {
 	if(frequency < 19 || frequency > 1193182)
 		return 0;
