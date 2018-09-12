@@ -180,6 +180,11 @@ void util_writeArgsStr(char* str, const char* format, va_list args)
 									break;
 							}
 							break;
+							
+						case 'u':
+							toCopy = util_lluitoa(va_arg(args, unsigned int));
+							strLen = util_strlen(toCopy);
+							break;
 						case '%':
 							toCopy = &percentSign;
 							strLen = 1;
