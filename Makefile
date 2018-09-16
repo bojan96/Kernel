@@ -4,7 +4,7 @@ OBJ = $(BUILD_DIR)/boot.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/irq.o $(BUILD_DIR)/
 $(BUILD_DIR)/isr_high_level.o $(BUILD_DIR)/isr.o $(BUILD_DIR)/io.o $(BUILD_DIR)/timer.o \
 $(BUILD_DIR)/terminal.o $(BUILD_DIR)/util.o $(BUILD_DIR)/assert.o $(BUILD_DIR)/allocator.o \
 $(BUILD_DIR)/thread.o
-CFLAGS = -std=gnu99 -ffreestanding -Wall -Wextra -masm=intel -D DEBUG_ALLOCATOR
+CFLAGS = -std=gnu99 -ffreestanding -Wall -Wextra -masm=intel -D DEBUG_ALLOCATOR -D DEBUG_THREADS
 
 all:$(BUILD_DIR)/kernel
 
@@ -48,7 +48,7 @@ $(BUILD_DIR)/assert.o : $(SRC_DIR)/assert.c $(SRC_DIR)/assert.h
 $(BUILD_DIR)/allocator.o : $(SRC_DIR)/allocator.c $(SRC_DIR)/allocator.h $(SRC_DIR)/multiboot.h $(SRC_DIR)/assert.h $(SRC_DIR)/terminal.h $(SRC_DIR)/util.h
 	i686-elf-gcc -c $(SRC_DIR)/allocator.c -o $(BUILD_DIR)/allocator.o $(CFLAGS)
 	
-$(BUILD_DIR)/thread.o : $(SRC_DIR)/thread.c $(SRC_DIR)/thread.h $(SRC_DIR)/irq_high_level.h $(SRC_DIR)/allocator.h $(SRC_DIR)/timer.h $(SRC_DIR)/assert.h
+$(BUILD_DIR)/thread.o : $(SRC_DIR)/thread.c $(SRC_DIR)/thread.h $(SRC_DIR)/irq_high_level.h $(SRC_DIR)/allocator.h $(SRC_DIR)/timer.h $(SRC_DIR)/assert.h $(SRC_DIR)/terminal.h
 	i686-elf-gcc -c $(SRC_DIR)/thread.c -o $(BUILD_DIR)/thread.o $(CFLAGS)
 	
 clean:
