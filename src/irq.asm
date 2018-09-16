@@ -13,11 +13,38 @@ irq_handler_%1:
 	jmp irq_common
 %endmacro
 
+; We do not use pushad and popad cuz popad is not inverse instruction of pushad
+%macro PUSHAD 0
+	mov [oldEsp], esp
+	push eax
+	push ecx
+	push edx
+	push ebx
+	push dword [oldEsp]
+	push ebp
+	push esi
+	push edi
+%endmacro
+
+%macro POPAD 0
+	pop edi
+	pop esi
+	pop ebp
+	pop dword [oldEsp]
+	pop ebx
+	pop edx
+	pop ecx
+	pop eax
+	mov esp, [oldEsp]
+%endmacro
+
 section .data
 
 irq_code dd 0
+
 ; Data needed by scheduler
 contextPtr dd 0
+oldEsp dd 0
 
 section .text
 global remap_irq
@@ -36,7 +63,9 @@ remap_irq:
 
 extern irq_common_high_level
 irq_common:
-	pushad ; save all GPR
+
+	PUSHAD ; save GPR
+	
 	mov [contextPtr], esp
 	push dword [irq_code]
 	call irq_common_high_level
@@ -47,8 +76,8 @@ irq_common:
 
 not_pic2:
 	OUT 0x20, PIC_EOI  ; send EOI to master
-
-	popad ; restore GPR
+	
+	POPAD ;restore GPR
 	iret
 
 ; Returns current context 
@@ -56,6 +85,8 @@ global get_context
 get_context:
 	mov eax, [contextPtr]
 	ret
+	
+extern threadProc
 
 DECLARE_IRQ 0
 DECLARE_IRQ 1
