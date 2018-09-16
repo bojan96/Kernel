@@ -30,7 +30,7 @@ void threadProc2()
 {
 	int prime;
 	
-	for(int num = 3; num < 1000; ++num)
+	for(int num = 3; num < 10000; ++num)
 	{
 		prime = 1;
 		
